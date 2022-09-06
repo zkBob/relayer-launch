@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  zkbob-redis:
+    command: [redis-server, --appendonly, 'yes']
+    image: redis:6.2.6
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+  zkbob-relayer:
+    image: ghcr.io/zkbob/zkbob-relayer:${RELAYER_IMAGE:-latest}
+    restart: always
+    depends_on:
+      - zkbob-redis
+    env_file: .env
+    environment:
+      - PORT=80
+      - RELAYER_REDIS_URL=zkbob-redis:6379
+      - TX_PROOFS_DIR=./tx_proofs
+    volumes:
+      - ./params:/app/zp-relayer/params
+      - relayer_optimistic_tree:/app/zp-relayer/optimisticTree.db
+      - relayer_optimistic_txs:/app/zp-relayer/optimisticTxs.db
+      - relayer_tree:/app/zp-relayer/poolTree.db
+      - relayer_txs:/app/zp-relayer/poolTxs.db
+    ports:
+      - $PUB_PORT:80
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+
+volumes:
+  relayer_optimistic_tree:
+  relayer_optimistic_txs:
+  relayer_tree:
+  relayer_txs:
