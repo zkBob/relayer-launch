@@ -31,11 +31,11 @@ If it is required to send the relayer logs to a remote syslog server the followi
 Run the following command to start the zkBOB relayer:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 To monitor he process of the relayer's boot up the logs can be accessible by
 
 ```
-docker-compose logs -f zkbob-relayer
+docker compose logs -f zkbob-relayer
 ```
