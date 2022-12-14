@@ -13,6 +13,7 @@ services:
   zkbob-relayer:
     image: ghcr.io/zkbob/zkbob-relayer:${RELAYER_IMAGE:-latest}
     restart: always
+    container_name: zkbob-relayer
     healthcheck:
       test: ["CMD", "sh", "-c", "curl -f --connect-timeout 1 --max-time 2 --retry 2 --retry-delay 3 --retry-max-time 15 http://127.0.0.1:80/info || sh -c 'pkill -15 -f \"/usr/local/bin/node index.js\" && (sleep 10; pkill -9 -f \"/usr/local/bin/node index.js\")'"]
       interval: 60s
